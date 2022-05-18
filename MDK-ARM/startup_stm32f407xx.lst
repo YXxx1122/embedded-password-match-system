@@ -870,12 +870,12 @@ ARM Macro Assembler    Page 14
               00000000 
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp --apcs=int
 erwork --depend="zlg7290 configuration\startup_stm32f407xx.d" -o"zlg7290 config
-uration\startup_stm32f407xx.o" -IC:\Users\小宝\Desktop\嵌入式系统\实验\口令匹配
-\MDK-ARM\RTE -IE:\MDK5.21\ARM\PACK\Keil\STM32F4xx_DFP\2.7.0\Drivers\CMSIS\Devic
-e\ST\STM32F4xx\Include -IE:\MDK5.21\ARM\CMSIS\Include --predefine="__MICROLIB S
-ETA 1" --predefine="__UVISION_VERSION SETA 521" --predefine="STM32F407xx SETA 1
-" --list=startup_stm32f407xx.lst ..\Drivers\CMSIS\Device\ST\STM32F4xx\Source\Te
-mplates\arm\startup_stm32f407xx.s
+uration\startup_stm32f407xx.o" -IC:\Users\小宝\Desktop\口令匹配\MDK-ARM\RTE -IE
+:\MDK5.21\ARM\PACK\Keil\STM32F4xx_DFP\2.7.0\Drivers\CMSIS\Device\ST\STM32F4xx\I
+nclude -IE:\MDK5.21\ARM\CMSIS\Include --predefine="__MICROLIB SETA 1" --predefi
+ne="__UVISION_VERSION SETA 521" --predefine="STM32F407xx SETA 1" --list=startup
+_stm32f407xx.lst ..\Drivers\CMSIS\Device\ST\STM32F4xx\Source\Templates\arm\star
+tup_stm32f407xx.s
 
 
 
