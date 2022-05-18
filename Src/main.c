@@ -173,16 +173,16 @@ void verify_pwd1(void) {
 void verify_pwd2(void)
 {
 	uint8_t i = 0;
-	if (flag == 14) {
+	if (flag == 14) {		//°´¼ü#
 		printf("\n\r begin match \r\n");
-		if (indx != 5) {
+		if (indx != 5) {	//³¤¶ÈÆ¥Åä
 			printf("\n\r pwd match failed \r\n");
 			return;
 		}
-		indx = 0;
-		while (i < 5) {
+		indx = 0;					//Çå¿ÕÃÜÂë»º³åÇø
+		while (i < 5) {		//ÖðÎ»ÃÜÂë½øÐÐÆ¥Åä
 			printf("%x ", pwd_tmp[i]);
-			pwd_tmp[i]++;
+			pwd_tmp[i]++;		//ÃÜÂë¹þÏ£
 			if (pwd_tmp[i] != pwd_hash[i]) {
 				printf("\n\r pwd match failed \r\n");
 				return;

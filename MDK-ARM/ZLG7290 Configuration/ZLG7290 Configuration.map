@@ -222,7 +222,7 @@ Section Cross References
     main.o(i.main) refers to printf5.o(i.__0printf$5) for __2printf
     main.o(i.main) refers to zlg7290.o(i.I2C_ZLG7290_Read) for I2C_ZLG7290_Read
     main.o(i.main) refers to main.o(i.swtich_key) for swtich_key
-    main.o(i.main) refers to main.o(i.verify_pwd) for verify_pwd
+    main.o(i.main) refers to main.o(i.verify_pwd_choose) for verify_pwd_choose
     main.o(i.main) refers to main.o(i.switch_flag) for switch_flag
     main.o(i.main) refers to main.o(.data) for .data
     main.o(i.main) refers to i2c.o(.bss) for hi2c1
@@ -230,9 +230,14 @@ Section Cross References
     main.o(i.switch_flag) refers to main.o(.data) for .data
     main.o(i.switch_flag) refers to i2c.o(.bss) for hi2c1
     main.o(i.swtich_key) refers to main.o(.data) for .data
-    main.o(i.verify_pwd) refers to printf5.o(i.__0printf$5) for __2printf
-    main.o(i.verify_pwd) refers to main.o(.data) for .data
-    main.o(i.verify_pwd) refers to main.o(.bss) for .bss
+    main.o(i.verify_pwd1) refers to printf5.o(i.__0printf$5) for __2printf
+    main.o(i.verify_pwd1) refers to main.o(.data) for .data
+    main.o(i.verify_pwd1) refers to main.o(.bss) for .bss
+    main.o(i.verify_pwd2) refers to printf5.o(i.__0printf$5) for __2printf
+    main.o(i.verify_pwd2) refers to main.o(.data) for .data
+    main.o(i.verify_pwd2) refers to main.o(.bss) for .bss
+    main.o(i.verify_pwd_choose) refers to main.o(i.verify_pwd2) for verify_pwd2
+    main.o(i.verify_pwd_choose) refers to main.o(i.verify_pwd1) for verify_pwd1
     stm32f4xx_it.o(i.EXTI15_10_IRQHandler) refers to stm32f4xx_hal_gpio.o(i.HAL_GPIO_EXTI_IRQHandler) for HAL_GPIO_EXTI_IRQHandler
     stm32f4xx_it.o(i.SysTick_Handler) refers to stm32f4xx_hal.o(i.HAL_IncTick) for HAL_IncTick
     stm32f4xx_it.o(i.SysTick_Handler) refers to stm32f4xx_hal_cortex.o(i.HAL_SYSTICK_IRQHandler) for HAL_SYSTICK_IRQHandler
@@ -800,28 +805,24 @@ Image Symbol Table
 
     Symbol Name                              Value     Ov Type        Size  Object(Section)
 
-    ../clib/microlib/division.c              0x00000000   Number         0  uldiv.o ABSOLUTE
     ../clib/microlib/division.c              0x00000000   Number         0  uidiv.o ABSOLUTE
+    ../clib/microlib/division.c              0x00000000   Number         0  uldiv.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry5.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry2.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry11a.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry8b.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry9a.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry9b.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry10a.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry10b.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry11a.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry8b.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry8a.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry11b.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry7b.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry7a.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry5.o ABSOLUTE
     ../clib/microlib/longlong.c              0x00000000   Number         0  llshl.o ABSOLUTE
     ../clib/microlib/longlong.c              0x00000000   Number         0  llushr.o ABSOLUTE
     ../clib/microlib/longlong.c              0x00000000   Number         0  llsshr.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf1.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printfb.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf0.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf8.o ABSOLUTE
     ../clib/microlib/printf/printf.c         0x00000000   Number         0  printfa.o ABSOLUTE
     ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf7.o ABSOLUTE
     ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf6.o ABSOLUTE
@@ -829,6 +830,10 @@ Image Symbol Table
     ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf4.o ABSOLUTE
     ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf3.o ABSOLUTE
     ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf2.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printfb.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf0.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf8.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf1.o ABSOLUTE
     ../clib/microlib/printf/stubs.s          0x00000000   Number         0  stubs.o ABSOLUTE
     ../clib/microlib/stdio/streams.c         0x00000000   Number         0  stdout.o ABSOLUTE
     ../clib/microlib/stubs.s                 0x00000000   Number         0  iusefp.o ABSOLUTE
@@ -975,10 +980,12 @@ Image Symbol Table
     _printf_core                             0x08001b21   Thumb Code   658  printf5.o(i._printf_core)
     i.fputc                                  0x08001de0   Section        0  main.o(i.fputc)
     i.main                                   0x08001e00   Section        0  main.o(i.main)
-    i.switch_flag                            0x08001ee0   Section        0  main.o(i.switch_flag)
-    i.swtich_key                             0x08001f7c   Section        0  main.o(i.swtich_key)
-    i.verify_pwd                             0x08001fec   Section        0  main.o(i.verify_pwd)
-    .constdata                               0x080020b4   Section       16  stm32f4xx_hal_rcc.o(.constdata)
+    i.switch_flag                            0x08001eec   Section        0  main.o(i.switch_flag)
+    i.swtich_key                             0x08001f88   Section        0  main.o(i.swtich_key)
+    i.verify_pwd1                            0x08001ff8   Section        0  main.o(i.verify_pwd1)
+    i.verify_pwd2                            0x080020c0   Section        0  main.o(i.verify_pwd2)
+    i.verify_pwd_choose                      0x08002160   Section        0  main.o(i.verify_pwd_choose)
+    .constdata                               0x0800216a   Section       16  stm32f4xx_hal_rcc.o(.constdata)
     .data                                    0x20000000   Section        4  system_stm32f4xx.o(.data)
     .data                                    0x20000004   Section        4  stm32f4xx_hal.o(.data)
     uwTick                                   0x20000004   Data           4  stm32f4xx_hal.o(.data)
@@ -1200,13 +1207,15 @@ Image Symbol Table
     __scatterload_null                       0x08001b0f   Thumb Code     2  handlers.o(i.__scatterload_null)
     __scatterload_zeroinit                   0x08001b11   Thumb Code    14  handlers.o(i.__scatterload_zeroinit)
     fputc                                    0x08001de1   Thumb Code    28  main.o(i.fputc)
-    main                                     0x08001e01   Thumb Code   116  main.o(i.main)
-    switch_flag                              0x08001ee1   Thumb Code   148  main.o(i.switch_flag)
-    swtich_key                               0x08001f7d   Thumb Code   106  main.o(i.swtich_key)
-    verify_pwd                               0x08001fed   Thumb Code    96  main.o(i.verify_pwd)
-    APBAHBPrescTable                         0x080020b4   Data          16  stm32f4xx_hal_rcc.o(.constdata)
-    Region$$Table$$Base                      0x080020c4   Number         0  anon$$obj.o(Region$$Table)
-    Region$$Table$$Limit                     0x080020e4   Number         0  anon$$obj.o(Region$$Table)
+    main                                     0x08001e01   Thumb Code   128  main.o(i.main)
+    switch_flag                              0x08001eed   Thumb Code   148  main.o(i.switch_flag)
+    swtich_key                               0x08001f89   Thumb Code   106  main.o(i.swtich_key)
+    verify_pwd1                              0x08001ff9   Thumb Code    96  main.o(i.verify_pwd1)
+    verify_pwd2                              0x080020c1   Thumb Code    80  main.o(i.verify_pwd2)
+    verify_pwd_choose                        0x08002161   Thumb Code    10  main.o(i.verify_pwd_choose)
+    APBAHBPrescTable                         0x0800216a   Data          16  stm32f4xx_hal_rcc.o(.constdata)
+    Region$$Table$$Base                      0x0800217c   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x0800219c   Number         0  anon$$obj.o(Region$$Table)
     SystemCoreClock                          0x20000000   Data           4  system_stm32f4xx.o(.data)
     flag1                                    0x20000008   Data           1  main.o(.data)
     Rx1_Buffer                               0x20000009   Data           1  main.o(.data)
@@ -1230,29 +1239,29 @@ Memory Map of the image
 
   Image Entry point : 0x08000189
 
-  Load Region LR_IROM1 (Base: 0x08000000, Size: 0x00002114, Max: 0x00100000, ABSOLUTE)
+  Load Region LR_IROM1 (Base: 0x08000000, Size: 0x000021cc, Max: 0x00100000, ABSOLUTE)
 
-    Execution Region ER_IROM1 (Base: 0x08000000, Size: 0x000020e4, Max: 0x00100000, ABSOLUTE)
+    Execution Region ER_IROM1 (Base: 0x08000000, Size: 0x0000219c, Max: 0x00100000, ABSOLUTE)
 
     Base Addr    Size         Type   Attr      Idx    E Section Name        Object
 
-    0x08000000   0x00000188   Data   RO         1941    RESET               startup_stm32f407xx.o
-    0x08000188   0x00000000   Code   RO         1946  * .ARM.Collect$$$$00000000  mc_w.l(entry.o)
-    0x08000188   0x00000004   Code   RO         2210    .ARM.Collect$$$$00000001  mc_w.l(entry2.o)
-    0x0800018c   0x00000004   Code   RO         2213    .ARM.Collect$$$$00000004  mc_w.l(entry5.o)
-    0x08000190   0x00000000   Code   RO         2215    .ARM.Collect$$$$00000008  mc_w.l(entry7b.o)
-    0x08000190   0x00000000   Code   RO         2217    .ARM.Collect$$$$0000000A  mc_w.l(entry8b.o)
-    0x08000190   0x00000008   Code   RO         2218    .ARM.Collect$$$$0000000B  mc_w.l(entry9a.o)
-    0x08000198   0x00000000   Code   RO         2220    .ARM.Collect$$$$0000000D  mc_w.l(entry10a.o)
-    0x08000198   0x00000000   Code   RO         2222    .ARM.Collect$$$$0000000F  mc_w.l(entry11a.o)
-    0x08000198   0x00000004   Code   RO         2211    .ARM.Collect$$$$00002712  mc_w.l(entry2.o)
-    0x0800019c   0x00000024   Code   RO         1942    .text               startup_stm32f407xx.o
-    0x080001c0   0x00000062   Code   RO         2227    .text               mc_w.l(uldiv.o)
+    0x08000000   0x00000188   Data   RO         1953    RESET               startup_stm32f407xx.o
+    0x08000188   0x00000000   Code   RO         1958  * .ARM.Collect$$$$00000000  mc_w.l(entry.o)
+    0x08000188   0x00000004   Code   RO         2222    .ARM.Collect$$$$00000001  mc_w.l(entry2.o)
+    0x0800018c   0x00000004   Code   RO         2225    .ARM.Collect$$$$00000004  mc_w.l(entry5.o)
+    0x08000190   0x00000000   Code   RO         2227    .ARM.Collect$$$$00000008  mc_w.l(entry7b.o)
+    0x08000190   0x00000000   Code   RO         2229    .ARM.Collect$$$$0000000A  mc_w.l(entry8b.o)
+    0x08000190   0x00000008   Code   RO         2230    .ARM.Collect$$$$0000000B  mc_w.l(entry9a.o)
+    0x08000198   0x00000000   Code   RO         2232    .ARM.Collect$$$$0000000D  mc_w.l(entry10a.o)
+    0x08000198   0x00000000   Code   RO         2234    .ARM.Collect$$$$0000000F  mc_w.l(entry11a.o)
+    0x08000198   0x00000004   Code   RO         2223    .ARM.Collect$$$$00002712  mc_w.l(entry2.o)
+    0x0800019c   0x00000024   Code   RO         1954    .text               startup_stm32f407xx.o
+    0x080001c0   0x00000062   Code   RO         2239    .text               mc_w.l(uldiv.o)
     0x08000222   0x00000002   PAD
-    0x08000224   0x00000024   Code   RO         2240    .text               mc_w.l(init.o)
-    0x08000248   0x0000001e   Code   RO         2242    .text               mc_w.l(llshl.o)
-    0x08000266   0x00000020   Code   RO         2244    .text               mc_w.l(llushr.o)
-    0x08000286   0x00000008   Code   RO         1755    i.EXTI15_10_IRQHandler  stm32f4xx_it.o
+    0x08000224   0x00000024   Code   RO         2252    .text               mc_w.l(init.o)
+    0x08000248   0x0000001e   Code   RO         2254    .text               mc_w.l(llshl.o)
+    0x08000266   0x00000020   Code   RO         2256    .text               mc_w.l(llushr.o)
+    0x08000286   0x00000008   Code   RO         1767    i.EXTI15_10_IRQHandler  stm32f4xx_it.o
     0x0800028e   0x00000016   Code   RO          704    i.HAL_Delay         stm32f4xx_hal.o
     0x080002a4   0x0000000c   Code   RO         1677    i.HAL_GPIO_EXTI_Callback  main.o
     0x080002b0   0x00000018   Code   RO          965    i.HAL_GPIO_EXTI_IRQHandler  stm32f4xx_hal_gpio.o
@@ -1261,7 +1270,7 @@ Memory Map of the image
     0x08000494   0x00000100   Code   RO          238    i.HAL_I2C_Init      stm32f4xx_hal_i2c.o
     0x08000594   0x000001c4   Code   RO          250    i.HAL_I2C_Mem_Read  stm32f4xx_hal_i2c.o
     0x08000758   0x000000ec   Code   RO          253    i.HAL_I2C_Mem_Write  stm32f4xx_hal_i2c.o
-    0x08000844   0x0000004c   Code   RO         1820    i.HAL_I2C_MspInit   i2c.o
+    0x08000844   0x0000004c   Code   RO         1832    i.HAL_I2C_MspInit   i2c.o
     0x08000890   0x00000010   Code   RO          711    i.HAL_IncTick       stm32f4xx_hal.o
     0x080008a0   0x00000034   Code   RO          712    i.HAL_Init          stm32f4xx_hal.o
     0x080008d4   0x00000022   Code   RO          713    i.HAL_InitTick      stm32f4xx_hal.o
@@ -1283,7 +1292,7 @@ Memory Map of the image
     0x0800101a   0x00000002   Code   RO         1428    i.HAL_UART_ErrorCallback  stm32f4xx_hal_uart.o
     0x0800101c   0x0000010a   Code   RO         1431    i.HAL_UART_IRQHandler  stm32f4xx_hal_uart.o
     0x08001126   0x0000005e   Code   RO         1432    i.HAL_UART_Init     stm32f4xx_hal_uart.o
-    0x08001184   0x0000005c   Code   RO         1901    i.HAL_UART_MspInit  usart.o
+    0x08001184   0x0000005c   Code   RO         1913    i.HAL_UART_MspInit  usart.o
     0x080011e0   0x00000002   Code   RO         1438    i.HAL_UART_RxCpltCallback  stm32f4xx_hal_uart.o
     0x080011e2   0x00000002   PAD
     0x080011e4   0x000000cc   Code   RO         1440    i.HAL_UART_Transmit  stm32f4xx_hal_uart.o
@@ -1294,15 +1303,15 @@ Memory Map of the image
     0x08001424   0x0000008a   Code   RO          279    i.I2C_WaitOnFlagUntilTimeout  stm32f4xx_hal_i2c.o
     0x080014ae   0x00000002   PAD
     0x080014b0   0x00000088   Code   RO          280    i.I2C_WaitOnMasterAddressFlagUntilTimeout  stm32f4xx_hal_i2c.o
-    0x08001538   0x00000030   Code   RO         1861    i.I2C_ZLG7290_Read  zlg7290.o
-    0x08001568   0x00000032   Code   RO         1862    i.I2C_ZLG7290_Write  zlg7290.o
+    0x08001538   0x00000030   Code   RO         1873    i.I2C_ZLG7290_Read  zlg7290.o
+    0x08001568   0x00000032   Code   RO         1874    i.I2C_ZLG7290_Write  zlg7290.o
     0x0800159a   0x00000002   PAD
-    0x0800159c   0x00000034   Code   RO         1863    i.I2C_ZLG7290_WriteOneByte  zlg7290.o
-    0x080015d0   0x0000007c   Code   RO         1795    i.MX_GPIO_Init      gpio.o
-    0x0800164c   0x00000030   Code   RO         1821    i.MX_I2C1_Init      i2c.o
-    0x0800167c   0x00000028   Code   RO         1902    i.MX_USART1_UART_Init  usart.o
+    0x0800159c   0x00000034   Code   RO         1875    i.I2C_ZLG7290_WriteOneByte  zlg7290.o
+    0x080015d0   0x0000007c   Code   RO         1807    i.MX_GPIO_Init      gpio.o
+    0x0800164c   0x00000030   Code   RO         1833    i.MX_I2C1_Init      i2c.o
+    0x0800167c   0x00000028   Code   RO         1914    i.MX_USART1_UART_Init  usart.o
     0x080016a4   0x00000020   Code   RO         1045    i.NVIC_SetPriority  stm32f4xx_hal_cortex.o
-    0x080016c4   0x0000000e   Code   RO         1756    i.SysTick_Handler   stm32f4xx_it.o
+    0x080016c4   0x0000000e   Code   RO         1768    i.SysTick_Handler   stm32f4xx_it.o
     0x080016d2   0x00000002   PAD
     0x080016d4   0x00000094   Code   RO         1678    i.SystemClock_Config  main.o
     0x08001768   0x00000054   Code   RO            5    i.SystemInit        system_stm32f4xx.o
@@ -1310,20 +1319,23 @@ Memory Map of the image
     0x08001864   0x00000178   Code   RO         1451    i.UART_SetConfig    stm32f4xx_hal_uart.o
     0x080019dc   0x00000066   Code   RO         1452    i.UART_Transmit_IT  stm32f4xx_hal_uart.o
     0x08001a42   0x00000092   Code   RO         1453    i.UART_WaitOnFlagUntilTimeout  stm32f4xx_hal_uart.o
-    0x08001ad4   0x0000000c   Code   RO         1757    i.USART1_IRQHandler  stm32f4xx_it.o
-    0x08001ae0   0x00000020   Code   RO         2082    i.__0printf$5       mc_w.l(printf5.o)
-    0x08001b00   0x0000000e   Code   RO         2252    i.__scatterload_copy  mc_w.l(handlers.o)
-    0x08001b0e   0x00000002   Code   RO         2253    i.__scatterload_null  mc_w.l(handlers.o)
-    0x08001b10   0x0000000e   Code   RO         2254    i.__scatterload_zeroinit  mc_w.l(handlers.o)
+    0x08001ad4   0x0000000c   Code   RO         1769    i.USART1_IRQHandler  stm32f4xx_it.o
+    0x08001ae0   0x00000020   Code   RO         2094    i.__0printf$5       mc_w.l(printf5.o)
+    0x08001b00   0x0000000e   Code   RO         2264    i.__scatterload_copy  mc_w.l(handlers.o)
+    0x08001b0e   0x00000002   Code   RO         2265    i.__scatterload_null  mc_w.l(handlers.o)
+    0x08001b10   0x0000000e   Code   RO         2266    i.__scatterload_zeroinit  mc_w.l(handlers.o)
     0x08001b1e   0x00000002   PAD
-    0x08001b20   0x000002c0   Code   RO         2089    i._printf_core      mc_w.l(printf5.o)
+    0x08001b20   0x000002c0   Code   RO         2101    i._printf_core      mc_w.l(printf5.o)
     0x08001de0   0x00000020   Code   RO         1679    i.fputc             main.o
-    0x08001e00   0x000000e0   Code   RO         1680    i.main              main.o
-    0x08001ee0   0x0000009c   Code   RO         1681    i.switch_flag       main.o
-    0x08001f7c   0x00000070   Code   RO         1682    i.swtich_key        main.o
-    0x08001fec   0x000000c8   Code   RO         1683    i.verify_pwd        main.o
-    0x080020b4   0x00000010   Data   RO         1166    .constdata          stm32f4xx_hal_rcc.o
-    0x080020c4   0x00000020   Data   RO         2250    Region$$Table       anon$$obj.o
+    0x08001e00   0x000000ec   Code   RO         1680    i.main              main.o
+    0x08001eec   0x0000009c   Code   RO         1681    i.switch_flag       main.o
+    0x08001f88   0x00000070   Code   RO         1682    i.swtich_key        main.o
+    0x08001ff8   0x000000c8   Code   RO         1683    i.verify_pwd1       main.o
+    0x080020c0   0x000000a0   Code   RO         1684    i.verify_pwd2       main.o
+    0x08002160   0x0000000a   Code   RO         1685    i.verify_pwd_choose  main.o
+    0x0800216a   0x00000010   Data   RO         1166    .constdata          stm32f4xx_hal_rcc.o
+    0x0800217a   0x00000002   PAD
+    0x0800217c   0x00000020   Data   RO         2262    Region$$Table       anon$$obj.o
 
 
     Execution Region RW_IRAM1 (Base: 0x20000000, Size: 0x000004c0, Max: 0x00020000, ABSOLUTE)
@@ -1332,14 +1344,14 @@ Memory Map of the image
 
     0x20000000   0x00000004   Data   RW            7    .data               system_stm32f4xx.o
     0x20000004   0x00000004   Data   RW          718    .data               stm32f4xx_hal.o
-    0x20000008   0x0000001d   Data   RW         1685    .data               main.o
+    0x20000008   0x0000001d   Data   RW         1687    .data               main.o
     0x20000025   0x00000003   PAD
-    0x20000028   0x00000004   Data   RW         1864    .data               zlg7290.o
-    0x2000002c   0x00000004   Data   RW         2224    .data               mc_w.l(stdout.o)
-    0x20000030   0x00000014   Zero   RW         1684    .bss                main.o
-    0x20000044   0x0000003c   Zero   RW         1822    .bss                i2c.o
-    0x20000080   0x00000040   Zero   RW         1903    .bss                usart.o
-    0x200000c0   0x00000400   Zero   RW         1939    STACK               startup_stm32f407xx.o
+    0x20000028   0x00000004   Data   RW         1876    .data               zlg7290.o
+    0x2000002c   0x00000004   Data   RW         2236    .data               mc_w.l(stdout.o)
+    0x20000030   0x00000014   Zero   RW         1686    .bss                main.o
+    0x20000044   0x0000003c   Zero   RW         1834    .bss                i2c.o
+    0x20000080   0x00000040   Zero   RW         1915    .bss                usart.o
+    0x200000c0   0x00000400   Zero   RW         1951    STACK               startup_stm32f407xx.o
 
 
 ==============================================================================
@@ -1351,7 +1363,7 @@ Image component sizes
 
        124         12          0          0          0        931   gpio.o
        124         26          0          0         60       1533   i2c.o
-       884        288          0         29         20       5149   main.o
+      1066        368          0         29         20       6308   main.o
         36          8        392          0       1024        916   startup_stm32f407xx.o
        136         16          0          4          0       4162   stm32f4xx_hal.o
        228         14          0          0          0      31689   stm32f4xx_hal_cortex.o
@@ -1366,9 +1378,9 @@ Image component sizes
        150          8          0          4          0       2723   zlg7290.o
 
     ----------------------------------------------------------------------
-      6994        594        440         44       1168     413640   Object Totals
+      7176        674        442         44       1168     414799   Object Totals
          0          0         32          0          0          0   (incl. Generated)
-        12          0          0          3          0          0   (incl. Padding)
+        12          0          2          3          0          0   (incl. Padding)
 
     ----------------------------------------------------------------------
 
@@ -1410,15 +1422,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-      7980        666        440         48       1168     408868   Grand Totals
-      7980        666        440         48       1168     408868   ELF Image Totals
-      7980        666        440         48          0          0   ROM Totals
+      8162        746        442         48       1168     409827   Grand Totals
+      8162        746        442         48       1168     409827   ELF Image Totals
+      8162        746        442         48          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                 8420 (   8.22kB)
+    Total RO  Size (Code + RO Data)                 8604 (   8.40kB)
     Total RW  Size (RW Data + ZI Data)              1216 (   1.19kB)
-    Total ROM Size (Code + RO Data + RW Data)       8468 (   8.27kB)
+    Total ROM Size (Code + RO Data + RW Data)       8652 (   8.45kB)
 
 ==============================================================================
 
