@@ -183,13 +183,18 @@ void verify_pwd2(void)
 		while (i < 5) {		//逐位密码进行匹配
 			printf("%x ", pwd_tmp[i]);
 			pwd_tmp[i]++;		//密码哈希
-			if (pwd_tmp[i] != pwd_hash[i]) {
+			if (pwd_tmp[i] != pwd_hash[i]) { //密码匹配
 				printf("\n\r pwd match failed \r\n");
 				return;
 			}
 			i++;
 		}
 		printf("\n\r pwd match success \r\n");
+		return;
+	}
+	else if (indx <= 5) {//当输入不为#键且小于5位时，将其放入密码输入缓冲区
+		pwd_tmp[indx] = flag;
+		indx++;
 		return;
 	}
 }
