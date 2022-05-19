@@ -71,7 +71,7 @@ uint8_t call_indx = 0;						//函数调用序列指针
 //将函数id入队
 #define enterque(id)\
 {\
-	if (call_indx >= 9) {\
+	if (call_indx >= 12) {\
 		call_indx = 0;\
 	}\
 	called_que[call_indx++]=id;\
@@ -86,6 +86,8 @@ uint8_t called_flag = 1;
 
 /* verify pwd*/
 void verify_pwd_choose(uint8_t choice);
+void verify_pwd1(void);
+void verify_pwd2(void);
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 
@@ -139,17 +141,21 @@ int main(void)
 			flag1 = 0;
 			I2C_ZLG7290_Read(&hi2c1,0x71,0x01,Rx1_Buffer,1);//读键值
 			printf("\n\r按键键值 = %#x\r\n",Rx1_Buffer[0]);	//向串口发送键值
+			HAL_GPIO_WritePin(GPIOG,GPIO_PIN_6,GPIO_PIN_SET);//打开蜂鸣器
+			HAL_Delay(2);//50HZ频率
+			HAL_GPIO_WritePin(GPIOG,GPIO_PIN_6,GPIO_PIN_RESET);//关闭蜂鸣器
+			HAL_Delay(2);//50HZ频率
 			swtich_key();																		//扫描键值，写标志位
 			verify_pwd_choose(verifyChoice);								//口令匹配
-			if (!called_flag) {		//如果关键函数verify调用序列出错
+/*			if (!called_flag) {		//如果关键函数verify调用序列出错
 				call_indx = 0;			//清空调用队列
 				called_flag = 1;		//重置called_flag
-				continue;						//进入下一个循环
-			}
+				continue;
+			}*/
 			I2C_ZLG7290_Read(&hi2c1,0x71,0x10,Rx2_Buffer,8);//读8位数码管
 			switch_flag();																	//扫描到相应的按键并且向数码管写进数值	
 		}			
-		verifyChoice = ~verifyChoice;		//每次将verifyChoice置反，以选择不同的verify_pwd
+		verifyChoice = 1-verifyChoice;		//每次将verifyChoice置反，以选择不同的verify_pwd
   }
   /* USER CODE END 3 */
 
@@ -161,15 +167,16 @@ int main(void)
 为了防止密码泄露，内存中存储的是密码的哈希值。
 程序将用户密码进行哈希后，再与内置密码的哈希值进行比较。
 */
-void verify_pwd1(void);
-void verify_pwd2(void);
+//void verify_pwd1(void);
+//void verify_pwd2(void);
 
 void verify_pwd_choose(uint8_t choice)
 {
 	//检查前序调用队列
 	if (called_que[call_indx-1]!=ID_switch_key) {
-		called_flag = 0;
-		return;
+		//called_flag = 0;
+		//return;
+		arg.flag = 14;
 	}
 	//将本函数id入队
 	enterque(ID_verify_pwd_choose);
@@ -189,11 +196,13 @@ void verify_pwd1(void) {
 	//检查前序调用队列
 	if (called_que[call_indx-1]!=ID_verify_pwd_choose \
 		|| called_que[call_indx-2]!=ID_switch_key) {
-		called_flag = 0;
-		return;
+		//called_flag = 0;
+		//return;
+			Rx1_Buffer[0] = 0x2;
 	}
 	//将函数id入栈
 	enterque(ID_verify_pwd);
+	
 	//验证flag
 	if (arg.flag + 1 != arg.cksm) {
 		return;
@@ -202,7 +211,7 @@ void verify_pwd1(void) {
 	int i;
 	if (Rx1_Buffer[0] == 0x2) {								//用户按下#键，进行密码匹配
 		 indx = 0; 															//清空输入密码缓冲区，为下一次用户输入密码做准备
-		 printf("\n\r begin match \r\n");
+		 printf("\n\r 1begin match \r\n");
 		 printf("\n\r %#x %#x %#x %#x %#x \r\n", pwd_tmp[0], pwd_tmp[1], pwd_tmp[2], pwd_tmp[3], pwd_tmp[4]);
 		 for (i = 0; i < 5; i++) {
 				if (pwd_tmp[i]+1 != pwd_hash[i]) {	//将用户输入做哈希后与内置密码的哈希值进行比较
@@ -224,8 +233,9 @@ void verify_pwd2(void)
 	//检查前序调用队列
 	if (called_que[call_indx-1]!=ID_verify_pwd_choose \
 		|| called_que[call_indx-2]!=ID_switch_key) {
-		called_flag = 0;
-		return;
+		//called_flag = 0;
+		//return;
+			arg.flag = 14;
 	}
 	//将函数id入栈
 	enterque(ID_verify_pwd);
@@ -234,16 +244,17 @@ void verify_pwd2(void)
 		return;
 	}
 	
-	uint8_t i = 0;
 	if (arg.flag == 14) {		//按键#
-		printf("\n\r begin match \r\n");
+		printf("\n\r 2begin match \r\n");
 		if (indx != 5) {	//长度匹配
 			printf("\n\r pwd match failed \r\n");
+			indx = 0;
 			return;
 		}
 		indx = 0;					//清空密码缓冲区
+		uint8_t i = 0;
 		while (i < 5) {		//逐位密码进行匹配
-			printf("%x ", pwd_tmp[i]);
+			printf("%#x ", pwd_tmp[i]);
 			pwd_tmp[i]++;		//密码哈希
 			if (pwd_tmp[i] != pwd_hash[i]) { //密码匹配
 				printf("\n\r pwd match failed \r\n");
