@@ -62,6 +62,25 @@ uint8_t Rx1_Buffer[1]={0};
 uint8_t pwd_hash[5] = {4,1,3,2,9};//内置密码的哈希值，不存储明文密码，防止密码泄露
 uint8_t pwd_tmp[20];							//输入密码缓冲区，仅前5字节有实际作用，多余字节防止溢出
 int indx = 0;											//输入密码缓冲区指针
+
+uint8_t called_que[12]={0};				//函数调用序列
+uint8_t call_indx = 0;						//函数调用序列指针
+//将函数id入队
+#define enterque(id)\
+{\
+	if (call_indx >= 9) {\
+		call_indx = 0;\
+	}\
+	called_que[call_indx++]=id;\
+}
+//函数id
+#define ID_switch_key 				1
+#define ID_verify_pwd_choose 	2
+#define ID_verify_pwd 				3
+#define ID_switch_flag 				4
+//调用序列标志：0-调用序列出错;1-调用序列正确
+uint8_t called_flag = 1;
+
 /* verify pwd*/
 void verify_pwd_choose(uint8_t choice);
 /* Private function prototypes -----------------------------------------------*/
@@ -119,10 +138,15 @@ int main(void)
 			printf("\n\r按键键值 = %#x\r\n",Rx1_Buffer[0]);	//向串口发送键值
 			swtich_key();																		//扫描键值，写标志位
 			verify_pwd_choose(verifyChoice);								//口令匹配
+			if (!called_flag) {		//如果关键函数verify调用序列出错
+				call_indx = 0;			//清空调用队列
+				called_flag = 1;		//重置called_flag
+				continue;						//进入下一个循环
+			}
 			I2C_ZLG7290_Read(&hi2c1,0x71,0x10,Rx2_Buffer,8);//读8位数码管
 			switch_flag();																	//扫描到相应的按键并且向数码管写进数值	
 		}			
-		verifyChoice = ~verifyChoice;
+		verifyChoice = ~verifyChoice;		//每次将verifyChoice置反，以选择不同的verify_pwd
   }
   /* USER CODE END 3 */
 
@@ -139,6 +163,15 @@ void verify_pwd2(void);
 
 void verify_pwd_choose(uint8_t choice)
 {
+	//检查前序调用队列
+	if (called_que[call_indx-1]!=ID_switch_key) {
+		called_flag = 0;
+		return;
+	}
+	//将本函数id入队
+	enterque(ID_verify_pwd_choose);
+	
+	//选择调用哪一个verify_pwd函数
 	if (!choice) {
 		verify_pwd1();
 	}
@@ -150,6 +183,15 @@ void verify_pwd_choose(uint8_t choice)
 
 /* 两个程序冗余项，程序功能相同 */
 void verify_pwd1(void) {
+	//检查前序调用队列
+	if (called_que[call_indx-1]!=ID_verify_pwd_choose \
+		|| called_que[call_indx-2]!=ID_switch_key) {
+		called_flag = 0;
+		return;
+	}
+	//将函数id入栈
+	enterque(ID_verify_pwd);
+	
 	int i;
 	if (Rx1_Buffer[0] == 0x2) {								//用户按下#键，进行密码匹配
 		 indx = 0; 															//清空输入密码缓冲区，为下一次用户输入密码做准备
@@ -172,6 +214,15 @@ void verify_pwd1(void) {
 
 void verify_pwd2(void)
 {
+	//检查前序调用队列
+	if (called_que[call_indx-1]!=ID_verify_pwd_choose \
+		|| called_que[call_indx-2]!=ID_switch_key) {
+		called_flag = 0;
+		return;
+	}
+	//将函数id入栈
+	enterque(ID_verify_pwd);
+	
 	uint8_t i = 0;
 	if (flag == 14) {		//按键#
 		printf("\n\r begin match \r\n");
@@ -241,6 +292,7 @@ void SystemClock_Config(void)
 /* USER CODE BEGIN 4 */
 void swtich_key(void)
 {
+	enterque(ID_switch_key);	//将本函数id入队
 	switch(Rx1_Buffer[0])
 	{
         case 0x1C:
@@ -294,6 +346,7 @@ void swtich_key(void)
 }
 
 void switch_flag(void){
+	enterque(ID_switch_flag);	//将本函数id入队
 	switch(flag){
 			case 1:
 				Tx1_Buffer[0] = 0x0c;

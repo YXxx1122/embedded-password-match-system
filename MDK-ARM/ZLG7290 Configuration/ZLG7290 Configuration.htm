@@ -3,9 +3,9 @@
 <title>Static Call Graph - [ZLG7290 Configuration\ZLG7290 Configuration.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image ZLG7290 Configuration\ZLG7290 Configuration.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060300: Last Updated: Thu May 19 09:28:28 2022
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060300: Last Updated: Thu May 19 10:49:27 2022
 <BR><P>
-<H3>Maximum Stack Usage =        232 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
+<H3>Maximum Stack Usage =        240 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
 main &rArr; switch_flag &rArr; I2C_ZLG7290_Write &rArr; I2C_ZLG7290_WriteOneByte &rArr; HAL_I2C_Mem_Write &rArr; I2C_RequestMemoryWrite &rArr; I2C_WaitOnFlagUntilTimeout
 <P>
@@ -845,8 +845,8 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> printf5.o(i.__0printf$5)
 </UL>
-<P><STRONG><a name="[5b]"></a>main</STRONG> (Thumb, 128 bytes, Stack size 8 bytes, main.o(i.main))
-<BR><BR>[Stack]<UL><LI>Max Depth = 232<LI>Call Chain = main &rArr; switch_flag &rArr; I2C_ZLG7290_Write &rArr; I2C_ZLG7290_WriteOneByte &rArr; HAL_I2C_Mem_Write &rArr; I2C_RequestMemoryWrite &rArr; I2C_WaitOnFlagUntilTimeout
+<P><STRONG><a name="[5b]"></a>main</STRONG> (Thumb, 138 bytes, Stack size 8 bytes, main.o(i.main))
+<BR><BR>[Stack]<UL><LI>Max Depth = 240<LI>Call Chain = main &rArr; switch_flag &rArr; I2C_ZLG7290_Write &rArr; I2C_ZLG7290_WriteOneByte &rArr; HAL_I2C_Mem_Write &rArr; I2C_RequestMemoryWrite &rArr; I2C_WaitOnFlagUntilTimeout
 </UL>
 <BR>[Calls]<UL><LI><a href="#[72]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_Init
 <LI><a href="#[98]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
@@ -861,36 +861,38 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> entry9a.o(.ARM.Collect$$$$0000000B)
 </UL>
-<P><STRONG><a name="[9b]"></a>switch_flag</STRONG> (Thumb, 148 bytes, Stack size 16 bytes, main.o(i.switch_flag))
-<BR><BR>[Stack]<UL><LI>Max Depth = 224<LI>Call Chain = switch_flag &rArr; I2C_ZLG7290_Write &rArr; I2C_ZLG7290_WriteOneByte &rArr; HAL_I2C_Mem_Write &rArr; I2C_RequestMemoryWrite &rArr; I2C_WaitOnFlagUntilTimeout
+<P><STRONG><a name="[9b]"></a>switch_flag</STRONG> (Thumb, 170 bytes, Stack size 24 bytes, main.o(i.switch_flag))
+<BR><BR>[Stack]<UL><LI>Max Depth = 232<LI>Call Chain = switch_flag &rArr; I2C_ZLG7290_Write &rArr; I2C_ZLG7290_WriteOneByte &rArr; HAL_I2C_Mem_Write &rArr; I2C_RequestMemoryWrite &rArr; I2C_WaitOnFlagUntilTimeout
 </UL>
 <BR>[Calls]<UL><LI><a href="#[8d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_ZLG7290_Write
 </UL>
 <BR>[Called By]<UL><LI><a href="#[5b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[99]"></a>swtich_key</STRONG> (Thumb, 106 bytes, Stack size 0 bytes, main.o(i.swtich_key))
-<BR><BR>[Called By]<UL><LI><a href="#[5b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
+<P><STRONG><a name="[99]"></a>swtich_key</STRONG> (Thumb, 132 bytes, Stack size 8 bytes, main.o(i.swtich_key))
+<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = swtich_key
+</UL>
+<BR>[Called By]<UL><LI><a href="#[5b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[9c]"></a>verify_pwd1</STRONG> (Thumb, 96 bytes, Stack size 16 bytes, main.o(i.verify_pwd1))
-<BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = verify_pwd1 &rArr; __2printf
+<P><STRONG><a name="[9c]"></a>verify_pwd1</STRONG> (Thumb, 142 bytes, Stack size 24 bytes, main.o(i.verify_pwd1))
+<BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = verify_pwd1 &rArr; __2printf
 </UL>
 <BR>[Calls]<UL><LI><a href="#[98]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
 </UL>
 <BR>[Called By]<UL><LI><a href="#[9a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;verify_pwd_choose
 </UL>
 
-<P><STRONG><a name="[9d]"></a>verify_pwd2</STRONG> (Thumb, 92 bytes, Stack size 16 bytes, main.o(i.verify_pwd2))
-<BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = verify_pwd2 &rArr; __2printf
+<P><STRONG><a name="[9d]"></a>verify_pwd2</STRONG> (Thumb, 140 bytes, Stack size 24 bytes, main.o(i.verify_pwd2))
+<BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = verify_pwd2 &rArr; __2printf
 </UL>
 <BR>[Calls]<UL><LI><a href="#[98]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
 </UL>
 <BR>[Called By]<UL><LI><a href="#[9a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;verify_pwd_choose
 </UL>
 
-<P><STRONG><a name="[9a]"></a>verify_pwd_choose</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, main.o(i.verify_pwd_choose))
-<BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = verify_pwd_choose &rArr; verify_pwd2 &rArr; __2printf
+<P><STRONG><a name="[9a]"></a>verify_pwd_choose</STRONG> (Thumb, 56 bytes, Stack size 8 bytes, main.o(i.verify_pwd_choose))
+<BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = verify_pwd_choose &rArr; verify_pwd2 &rArr; __2printf
 </UL>
 <BR>[Calls]<UL><LI><a href="#[9d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;verify_pwd2
 <LI><a href="#[9c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;verify_pwd1
