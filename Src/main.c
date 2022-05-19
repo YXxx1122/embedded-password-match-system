@@ -53,17 +53,41 @@
 #define BUFFER_SIZE2              (countof(Rx2_Buffer))
 #define countof(a) (sizeof(a) / sizeof(*(a)))
 
-uint8_t flag;//不同的按键有不同的标志位值
-uint8_t flag1 = 0;//中断标志位，每次按键产生一次中断，并开始读取8个数码管的值
+struct flag_arg {
+	uint8_t flag;										//不同的按键有不同的标志位值
+	uint8_t cksm;										//flag校验码=flag+1
+} arg;
+uint8_t flag1 = 0;								//中断标志位，每次按键产生一次中断，并开始读取8个数码管的值
 uint8_t Rx2_Buffer[8]={0};
 uint8_t Tx1_Buffer[8]={0};
 uint8_t Rx1_Buffer[1]={0};
 /* USER CODE END PV */
 uint8_t pwd_hash[5] = {4,1,3,2,9};//内置密码的哈希值，不存储明文密码，防止密码泄露
-uint8_t pwd_tmp[20];//输入密码缓冲区，仅前5字节有实际作用，多余字节防止溢出
-int indx = 0;//输入密码缓冲区指针
+uint8_t pwd_tmp[20];							//输入密码缓冲区，仅前5字节有实际作用，多余字节防止溢出
+int indx = 0;											//输入密码缓冲区指针
+
+uint8_t called_que[12]={0};				//函数调用序列
+uint8_t call_indx = 0;						//函数调用序列指针
+//将函数id入队
+#define enterque(id)\
+{\
+	if (call_indx >= 12) {\
+		call_indx = 0;\
+	}\
+	called_que[call_indx++]=id;\
+}
+//函数id
+#define ID_switch_key 				1
+#define ID_verify_pwd_choose 	2
+#define ID_verify_pwd 				3
+#define ID_switch_flag 				4
+//调用序列标志：0-调用序列出错;1-调用序列正确
+uint8_t called_flag = 1;
+
 /* verify pwd*/
-void verify_pwd(void);
+void verify_pwd_choose(uint8_t choice);
+void verify_pwd1(void);
+void verify_pwd2(void);
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 
@@ -105,6 +129,8 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+	uint8_t verifyChoice = 0;				//用于选择使用哪一个verify_pwd函数
+	
   while (1)
   {
   /* USER CODE END WHILE */
@@ -114,12 +140,22 @@ int main(void)
 		{
 			flag1 = 0;
 			I2C_ZLG7290_Read(&hi2c1,0x71,0x01,Rx1_Buffer,1);//读键值
-			printf("\n\r按键键值 = %#x\r\n",Rx1_Buffer[0]);//向串口发送键值
-			swtich_key();//扫描键值，写标志位
-			verify_pwd();//口令匹配
+			printf("\n\r按键键值 = %#x\r\n",Rx1_Buffer[0]);	//向串口发送键值
+			HAL_GPIO_WritePin(GPIOG,GPIO_PIN_6,GPIO_PIN_SET);//打开蜂鸣器
+			HAL_Delay(2);//50HZ频率
+			HAL_GPIO_WritePin(GPIOG,GPIO_PIN_6,GPIO_PIN_RESET);//关闭蜂鸣器
+			HAL_Delay(2);//50HZ频率
+			swtich_key();																		//扫描键值，写标志位
+			verify_pwd_choose(verifyChoice);								//口令匹配
+/*			if (!called_flag) {		//如果关键函数verify调用序列出错
+				call_indx = 0;			//清空调用队列
+				called_flag = 1;		//重置called_flag
+				continue;
+			}*/
 			I2C_ZLG7290_Read(&hi2c1,0x71,0x10,Rx2_Buffer,8);//读8位数码管
-			switch_flag();//扫描到相应的按键并且向数码管写进数值	
+			switch_flag();																	//扫描到相应的按键并且向数码管写进数值	
 		}			
+		verifyChoice = 1-verifyChoice;		//每次将verifyChoice置反，以选择不同的verify_pwd
   }
   /* USER CODE END 3 */
 
@@ -131,11 +167,51 @@ int main(void)
 为了防止密码泄露，内存中存储的是密码的哈希值。
 程序将用户密码进行哈希后，再与内置密码的哈希值进行比较。
 */
-void verify_pwd(void) {
+//void verify_pwd1(void);
+//void verify_pwd2(void);
+
+void verify_pwd_choose(uint8_t choice)
+{
+	//检查前序调用队列
+	if (called_que[call_indx-1]!=ID_switch_key) {
+		//called_flag = 0;
+		//return;
+		arg.flag = 14;
+	}
+	//将本函数id入队
+	enterque(ID_verify_pwd_choose);
+	
+	//选择调用哪一个verify_pwd函数
+	if (!choice) {
+		verify_pwd1();
+	}
+	else {
+		verify_pwd2();
+	}
+	return;
+}
+
+/* 两个程序冗余项，程序功能相同 */
+void verify_pwd1(void) {
+	//检查前序调用队列
+	if (called_que[call_indx-1]!=ID_verify_pwd_choose \
+		|| called_que[call_indx-2]!=ID_switch_key) {
+		//called_flag = 0;
+		//return;
+			Rx1_Buffer[0] = 0x2;
+	}
+	//将函数id入栈
+	enterque(ID_verify_pwd);
+	
+	//验证flag
+	if (arg.flag + 1 != arg.cksm) {
+		return;
+	}
+	
 	int i;
-	if (Rx1_Buffer[0] == 0x2) {	//用户按下#键，进行密码匹配
-		 indx = 0; //清空输入密码缓冲区，为下一次用户输入密码做准备
-		 printf("\n\r begin match \r\n");
+	if (Rx1_Buffer[0] == 0x2) {								//用户按下#键，进行密码匹配
+		 indx = 0; 															//清空输入密码缓冲区，为下一次用户输入密码做准备
+		 printf("\n\r 1begin match \r\n");
 		 printf("\n\r %#x %#x %#x %#x %#x \r\n", pwd_tmp[0], pwd_tmp[1], pwd_tmp[2], pwd_tmp[3], pwd_tmp[4]);
 		 for (i = 0; i < 5; i++) {
 				if (pwd_tmp[i]+1 != pwd_hash[i]) {	//将用户输入做哈希后与内置密码的哈希值进行比较
@@ -144,12 +220,56 @@ void verify_pwd(void) {
 				} 
 			}
 		 printf("\n\r pwd match success \r\n");
-		 return ;
+		 return;
 	}
-	if (indx <= 5) {	//用户每次输入，只有前5个按键值有效，多余输入不放入密码缓冲区，仅为了确保密码安全
-	  pwd_tmp[indx] = flag;//在switch_flag函数中，按键值被转换为相应数字，并放入了全局变量flag中
+	if (indx <= 5) {				//用户每次输入，只有前5个按键值有效，多余输入不放入密码缓冲区
+	  pwd_tmp[indx] = arg.flag;	//在switch_flag函数中，按键值被转换为相应数字，并放入了全局变量flag中
 	}
 	indx = indx + 1;
+}
+
+void verify_pwd2(void)
+{
+	//检查前序调用队列
+	if (called_que[call_indx-1]!=ID_verify_pwd_choose \
+		|| called_que[call_indx-2]!=ID_switch_key) {
+		//called_flag = 0;
+		//return;
+			arg.flag = 14;
+	}
+	//将函数id入栈
+	enterque(ID_verify_pwd);
+	//验证flag
+	if (arg.flag + 1 != arg.cksm) {
+		return;
+	}
+	
+	if (arg.flag == 14) {		//按键#
+		printf("\n\r 2begin match \r\n");
+		if (indx != 5) {	//长度匹配
+			printf("\n\r pwd match failed \r\n");
+			indx = 0;
+			return;
+		}
+		indx = 0;					//清空密码缓冲区
+		uint8_t i = 0;
+		while (i < 5) {		//逐位密码进行匹配
+			printf("%#x ", pwd_tmp[i]);
+			pwd_tmp[i]++;		//密码哈希
+			if (pwd_tmp[i] != pwd_hash[i]) { //密码匹配
+				printf("\n\r pwd match failed \r\n");
+				return;
+			}
+			i++;
+		}
+		printf("\n\r pwd match success \r\n");
+		return;
+	}
+	else if (indx <= 5) {//当输入不为#键且小于5位时，将其放入密码输入缓冲区
+		pwd_tmp[indx] = arg.flag;
+		indx++;
+		return;
+	}
 }
 
 
@@ -194,60 +314,69 @@ void SystemClock_Config(void)
 /* USER CODE BEGIN 4 */
 void swtich_key(void)
 {
+	enterque(ID_switch_key);	//将本函数id入队
+	
 	switch(Rx1_Buffer[0])
 	{
         case 0x1C:
-					flag = 1;					
+					arg.flag = 1;					
           break;
         case 0x1B:	
-					flag = 2;
+					arg.flag = 2;
           break;
         case 0x1A:	
-					flag = 3;
+					arg.flag = 3;
           break;
         case 0x14:
-					flag = 4;
+					arg.flag = 4;
           break;   
 				case 0x13:
-					flag = 5;
+					arg.flag = 5;
 					break;
         case 0x12:
-					flag = 6;
+					arg.flag = 6;
           break;
         case 0x0C:
-					flag = 7;
+					arg.flag = 7;
           break;
         case 0x0B:
-          flag = 8;
+          arg.flag = 8;
           break;
 				case 0x0A:
-					flag = 9;
+					arg.flag = 9;
 					break;
 				case 0x03:
-					flag = 0;
+					arg.flag = 0;
 					break;
 				case 0x19:
-					flag = 10;
+					arg.flag = 10;
 					break;
 				case 0x11:
-					flag = 11;
+					arg.flag = 11;
 					break;
 				case 0x09:
-					flag = 12;
+					arg.flag = 12;
 					break;
 				case 0x01:
-					flag = 13;
+					arg.flag = 13;
 					break;
 				case 0x02:
-					flag = 14;
+					arg.flag = 14;
 					break;
         default:
           break;
 			}
+	arg.cksm = arg.flag + 1;	//计算flag校验码
 }
 
 void switch_flag(void){
-	switch(flag){
+	enterque(ID_switch_flag);				//将本函数id入队
+	
+	if (arg.flag + 1 != arg.cksm) {	//验证flag
+		return;
+	}
+	
+	switch(arg.flag){
 			case 1:
 				Tx1_Buffer[0] = 0x0c;
 				if(Rx2_Buffer[0] == 0)
