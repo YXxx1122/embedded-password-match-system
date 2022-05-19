@@ -53,7 +53,10 @@
 #define BUFFER_SIZE2              (countof(Rx2_Buffer))
 #define countof(a) (sizeof(a) / sizeof(*(a)))
 
-uint8_t flag;											//不同的按键有不同的标志位值
+struct flag_arg {
+	uint8_t flag;										//不同的按键有不同的标志位值
+	uint8_t cksm;										//flag校验码=flag+1
+} arg;
 uint8_t flag1 = 0;								//中断标志位，每次按键产生一次中断，并开始读取8个数码管的值
 uint8_t Rx2_Buffer[8]={0};
 uint8_t Tx1_Buffer[8]={0};
@@ -191,6 +194,10 @@ void verify_pwd1(void) {
 	}
 	//将函数id入栈
 	enterque(ID_verify_pwd);
+	//验证flag
+	if (arg.flag + 1 != arg.cksm) {
+		return;
+	}
 	
 	int i;
 	if (Rx1_Buffer[0] == 0x2) {								//用户按下#键，进行密码匹配
@@ -207,7 +214,7 @@ void verify_pwd1(void) {
 		 return;
 	}
 	if (indx <= 5) {				//用户每次输入，只有前5个按键值有效，多余输入不放入密码缓冲区
-	  pwd_tmp[indx] = flag;	//在switch_flag函数中，按键值被转换为相应数字，并放入了全局变量flag中
+	  pwd_tmp[indx] = arg.flag;	//在switch_flag函数中，按键值被转换为相应数字，并放入了全局变量flag中
 	}
 	indx = indx + 1;
 }
@@ -222,9 +229,13 @@ void verify_pwd2(void)
 	}
 	//将函数id入栈
 	enterque(ID_verify_pwd);
+	//验证flag
+	if (arg.flag + 1 != arg.cksm) {
+		return;
+	}
 	
 	uint8_t i = 0;
-	if (flag == 14) {		//按键#
+	if (arg.flag == 14) {		//按键#
 		printf("\n\r begin match \r\n");
 		if (indx != 5) {	//长度匹配
 			printf("\n\r pwd match failed \r\n");
@@ -244,7 +255,7 @@ void verify_pwd2(void)
 		return;
 	}
 	else if (indx <= 5) {//当输入不为#键且小于5位时，将其放入密码输入缓冲区
-		pwd_tmp[indx] = flag;
+		pwd_tmp[indx] = arg.flag;
 		indx++;
 		return;
 	}
@@ -293,61 +304,68 @@ void SystemClock_Config(void)
 void swtich_key(void)
 {
 	enterque(ID_switch_key);	//将本函数id入队
+	
 	switch(Rx1_Buffer[0])
 	{
         case 0x1C:
-					flag = 1;					
+					arg.flag = 1;					
           break;
         case 0x1B:	
-					flag = 2;
+					arg.flag = 2;
           break;
         case 0x1A:	
-					flag = 3;
+					arg.flag = 3;
           break;
         case 0x14:
-					flag = 4;
+					arg.flag = 4;
           break;   
 				case 0x13:
-					flag = 5;
+					arg.flag = 5;
 					break;
         case 0x12:
-					flag = 6;
+					arg.flag = 6;
           break;
         case 0x0C:
-					flag = 7;
+					arg.flag = 7;
           break;
         case 0x0B:
-          flag = 8;
+          arg.flag = 8;
           break;
 				case 0x0A:
-					flag = 9;
+					arg.flag = 9;
 					break;
 				case 0x03:
-					flag = 0;
+					arg.flag = 0;
 					break;
 				case 0x19:
-					flag = 10;
+					arg.flag = 10;
 					break;
 				case 0x11:
-					flag = 11;
+					arg.flag = 11;
 					break;
 				case 0x09:
-					flag = 12;
+					arg.flag = 12;
 					break;
 				case 0x01:
-					flag = 13;
+					arg.flag = 13;
 					break;
 				case 0x02:
-					flag = 14;
+					arg.flag = 14;
 					break;
         default:
           break;
 			}
+	arg.cksm = arg.flag + 1;	//计算flag校验码
 }
 
 void switch_flag(void){
-	enterque(ID_switch_flag);	//将本函数id入队
-	switch(flag){
+	enterque(ID_switch_flag);				//将本函数id入队
+	
+	if (arg.flag + 1 != arg.cksm) {	//验证flag
+		return;
+	}
+	
+	switch(arg.flag){
 			case 1:
 				Tx1_Buffer[0] = 0x0c;
 				if(Rx2_Buffer[0] == 0)
